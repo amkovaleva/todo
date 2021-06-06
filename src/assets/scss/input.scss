@@ -1,0 +1,33 @@
+
+input {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--dark-color);
+  outline: 0;
+  background: transparent;
+  font: 20px var(--monospace-font);
+  font-weight: bold;
+  color: var(--very-dark-color);
+  transition: all linear .2s;
+
+  &::placeholder {
+    color: transparent;
+  }
+
+  &:focus, &:hover {
+    color: var(--btn-bg-dark-color);
+  }
+
+  &[type='checkbox'] {
+    transform: scale(1.5);
+  }
+
+  &:invalid {
+    border-color: red;
+  }
+
+  &.title {
+    text-align: center;
+  }
+}

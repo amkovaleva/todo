@@ -1,0 +1,40 @@
+
+.todos-container {
+  margin: 50px 0;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+
+  .todo-items {
+    width: 100%;
+  }
+
+  & > .assign-place {
+    width: 240px;
+    transition: all linear .1s;
+
+    .btn {
+      width: 100%;
+
+      &.small {
+        width: auto;
+        float: right;
+      }
+    }
+
+    &.collapsed {
+      width: 50px;
+
+      b {
+        display: none;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 10px 0;
+        text-align: center;
+      }
+    }
+  }
+}

@@ -1,0 +1,111 @@
+:root {
+  --main-bg-color: #e2eefa;
+  --btn-bg-color: #14aaf5;
+  --btn-bg-dark-color: #129ce1;
+  --dark-color: #204c6a;
+  --very-dark-color: #1b3346;
+  --sans-serif-font: Helvetica, Arial, Verdana, sans-serif;
+  --monospace-font: "Courier New", "Lucida Console", monospace;;
+}
+
+@mixin border-box() {
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box; /* Firefox, other Gecko */
+  box-sizing: border-box; /* Opera/IE 8+ */
+}
+
+body {
+  color: var(--very-dark-color);
+  background: var(--main-bg-color);
+  font-family: var(--sans-serif-font);
+}
+
+#app {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+h1 {
+  font: 35px var(--monospace-font);
+  font-weight: bold;
+  margin: 20px 0 50px;
+}
+
+@import 'input';
+@import 'asside';
+@import 'popup';
+@import 'btn';
+
+.add-todo {
+  margin: 0;
+
+  input, > span {
+    display: inline-block;
+  }
+
+  input {
+    width: calc(100% - 250px);
+    margin-right: 50px;
+  }
+}
+
+.added-todos {
+  width: 100%;
+
+  .row {
+    margin: 20px 0;
+
+    input {
+      display: inline-block;
+      width: 50px;
+    }
+
+    input + input {
+      width: calc(100% - 100px);
+    }
+
+  }
+}
+
+.todo-items {
+  padding-right: 20px;
+}
+
+.note-item {
+  border-left: 3px solid var(--btn-bg-dark-color);
+  margin-top: 30px;
+  padding: 10px;
+
+  .description {
+    margin-left: 50px;
+
+    .item {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--btn-bg-dark-color);
+    }
+  }
+
+  &:hover {
+    border-color: var(--very-dark-color);
+  }
+
+  .head {
+    .btn {
+      width: 115px;
+      margin: 0 5px;
+      text-decoration: none;
+    }
+
+    p {
+      display: inline-block;
+      width: calc(100% - 250px);
+    }
+  }
+}
+
+.title {
+  font-size: 25px;
+  line-height: 30px;
+  font-weight: bold;
+  margin: 0;
+}

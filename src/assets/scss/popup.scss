@@ -1,0 +1,27 @@
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  background: rgba(0, 0, 0, 0.5);
+  text-align: center;
+
+  .popup {
+    position: relative;
+    background: white;
+    padding: 30px;
+    margin: auto;
+    border-radius: 5px;
+
+    .close {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      font-size: 30px;
+      cursor: pointer;
+    }
+  }
+}
