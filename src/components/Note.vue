@@ -8,15 +8,19 @@
     <div class="todo-items">
       <AddTodo :todos="note.todos"></AddTodo>
       <div class="added-todos">
-        <Toto v-for="todo in note.todos" :todo="todo"></Toto>
+        <Toto v-for="(todo, index) in note.todos" :todo="todo" :index="index"
+              @done-changed="reorderTodos" @del-todo="delTodo"></Toto>
       </div>
     </div>
     <div class="assign-place">
       <span class="btn small" @click="toggleAside">&#9776;</span>
       <span class="btn" @click="$saveNote(note, id)"><span>&#10003;</span><b>Сохранить заметку</b> </span>
-      <span class="btn"><span>&#10007;</span><b>Удалить заметку</b></span>
-      <span class="btn" @click="back"><span>&cularr;</span><b>Отменить изменения</b> </span>
-      <span class="btn" @click="revertBack"><span>&curarr;</span><b>Вернуть изменения</b> </span>
+      <span class="btn" @click="$deleteNote(id)">
+        <span class="del"><img src="/trash-bin.svg" alt="Удалить"></span>
+        <b>Удалить заметку</b>
+      </span>
+      <span class="btn" @click="back"><span>&cularr;</span><b>Отменить изменение</b> </span>
+      <span class="btn" @click="revertBack"><span>&curarr;</span><b>Вернуть изменение</b> </span>
     </div>
   </div>
 </template>
@@ -29,6 +33,7 @@ export default {
   name: "Note",
   components: {AddTodo, Toto},
   props: {id: Number},
+  inject: ['notes', 'pressedKeys'],
   data() {
     return {
       note: {
@@ -37,7 +42,6 @@ export default {
       }
     }
   },
-  inject: ['notes', 'pressedKeys'],
   methods: {
     back() {
       console.log('back!!')
@@ -52,6 +56,12 @@ export default {
     toggleAside() {
       document.getElementsByClassName('assign-place')[0].classList.toggle('collapsed');
     },
+    reorderTodos() {
+      this.note.todos = this.note.todos.sort((a, b) => a.done - b.done);
+    },
+    delTodo(event, index){
+      this.note.todos.splice(index, 1);
+    }
   },
   mounted() {
     if (this.notes.has(`${this.id}`)) {

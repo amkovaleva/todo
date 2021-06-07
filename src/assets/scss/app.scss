@@ -14,6 +14,12 @@
   box-sizing: border-box; /* Opera/IE 8+ */
 }
 
+@import 'input';
+@import 'asside';
+@import 'popup';
+@import 'btn';
+@import 'note';
+
 body {
   color: var(--very-dark-color);
   background: var(--main-bg-color);
@@ -31,81 +37,14 @@ h1 {
   margin: 20px 0 50px;
 }
 
-@import 'input';
-@import 'asside';
-@import 'popup';
-@import 'btn';
-
-.add-todo {
-  margin: 0;
-
-  input, > span {
-    display: inline-block;
-  }
-
-  input {
-    width: calc(100% - 250px);
-    margin-right: 50px;
-  }
-}
-
-.added-todos {
-  width: 100%;
-
-  .row {
-    margin: 20px 0;
-
-    input {
-      display: inline-block;
-      width: 50px;
-    }
-
-    input + input {
-      width: calc(100% - 100px);
-    }
-
-  }
-}
-
-.todo-items {
-  padding-right: 20px;
-}
-
-.note-item {
-  border-left: 3px solid var(--btn-bg-dark-color);
-  margin-top: 30px;
-  padding: 10px;
-
-  .description {
-    margin-left: 50px;
-
-    .item {
-      padding: 10px 0;
-      border-bottom: 1px solid var(--btn-bg-dark-color);
-    }
-  }
-
-  &:hover {
-    border-color: var(--very-dark-color);
-  }
-
-  .head {
-    .btn {
-      width: 115px;
-      margin: 0 5px;
-      text-decoration: none;
-    }
-
-    p {
-      display: inline-block;
-      width: calc(100% - 250px);
-    }
-  }
-}
 
 .title {
   font-size: 25px;
   line-height: 30px;
   font-weight: bold;
   margin: 0;
+}
+.del img{
+  width: 14px;
+  margin: -1px 0;
 }

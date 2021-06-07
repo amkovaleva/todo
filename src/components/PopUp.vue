@@ -2,10 +2,10 @@
   <div v-show="popUpInfo.open" class="popup-overlay">
     <div class="popup">
       <span class="close" @click="close">&#x2715;</span>
-      <p class="title">{{ popUpInfo.title }} </p>
-      <p>{{ popUpInfo.messageBase }} {{ popUpInfo.message }}?</p>
+      <p class="title">{{ title }} </p>
+      <p>{{ caption}}</p>
 
-      <div class="buttons">
+      <div class="buttons" v-show="!this.popUpInfo.justAlert">
         <span class="btn" @click="$popUpRes(true)"><b>ДА</b></span>
         <span class="btn" @click="$popUpRes(false)"><b>Нет</b></span>
       </div>
@@ -18,6 +18,14 @@
 export default {
   name: "PopUp",
   inject: ['popUpInfo'],
+  computed:{
+    title(){
+      return this.popUpInfo.justAlert ? this.popUpInfo.message : this.popUpInfo.title;
+    },
+    caption(){
+      return this.popUpInfo.justAlert ? '' : `${this.popUpInfo.messageBase} ${this.popUpInfo.message}?`;
+    }
+  },
   methods: {
     close() {
       this.popUpInfo.open = false;

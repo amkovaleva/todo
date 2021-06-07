@@ -35,12 +35,16 @@ export default {
             notes.set(`${id}`, note);
             saveData();
             router.push({name: 'Note', params: {id: id}});
+
+            popUpInfo.message = 'Заметка успешно сохранена!';
+            popUpInfo.justAlert = true;
+            popUpInfo.open = true;
         };
 
         app.config.globalProperties.$deleteNote = (id) => {
-            console.log(`$deleteNote ${id}`);
             popUpInfo.message = 'удалить заметку';
             popUpInfo.collBackParams = id;
+            popUpInfo.justAlert = false;
             popUpInfo.collBackYes = delNote;
             popUpInfo.open = true;
         };

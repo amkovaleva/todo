@@ -13,6 +13,7 @@ const popUpInfo = reactive({
     collBackYes: null,
     collBackNo: null,
     collBackParams: null,
+    justAlert: false,
 });
 
 let notesApp = createApp(App);
