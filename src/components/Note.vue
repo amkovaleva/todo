@@ -6,21 +6,22 @@
   <input v-model="note.name" class="title" required>
   <div class="todos-container">
     <div class="todo-items">
-      <AddTodo :todos="note.todos"></AddTodo>
+      <AddTodo :todos="note.todos" @todo-added="$addVersion(note)"></AddTodo>
       <div class="added-todos">
-        <Toto v-for="(todo, index) in note.todos" :todo="todo" :index="index"
-              @done-changed="reorderTodos" @del-todo="delTodo"></Toto>
+        <Toto v-for="(todo, index) in note.todos" :index="index" :todo="todo"
+              @done-changed="reorderTodos"
+              @del-todo="delTodo"></Toto>
       </div>
     </div>
     <div class="assign-place">
       <span class="btn small" @click="toggleAside">&#9776;</span>
-      <span class="btn" @click="$saveNote(note, id)"><span>&#10003;</span><b>Сохранить заметку</b> </span>
+      <span class="btn" @click="$saveNote(note, id); lastSavedVersion = version"><span>&#10003;</span><b>Сохранить заметку</b> </span>
       <span class="btn" @click="$deleteNote(id)">
-        <span class="del"><img src="/trash-bin.svg" alt="Удалить"></span>
+        <span class="del"><img alt="Удалить" src="/trash-bin.svg"></span>
         <b>Удалить заметку</b>
       </span>
-      <span class="btn" @click="back"><span>&cularr;</span><b>Отменить изменение</b> </span>
-      <span class="btn" @click="revertBack"><span>&curarr;</span><b>Вернуть изменение</b> </span>
+      <span class="btn" @click="moveVersion(true)"><span>&cularr;</span><b>Отменить изменение</b> </span>
+      <span class="btn" @click="moveVersion(false)"><span>&curarr;</span><b>Вернуть изменение</b> </span>
     </div>
   </div>
 </template>
@@ -32,41 +33,51 @@ import AddTodo from "./AddTodo.vue";
 export default {
   name: "Note",
   components: {AddTodo, Toto},
-  props: {id: Number},
+  props: ['id'],
   inject: ['notes', 'pressedKeys'],
   data() {
     return {
       note: {
         name: 'Новая заметка',
         todos: []
-      }
+      },
+      version: -1,
+      lastSavedVersion: 0,
+      isBackCall: false,
+      versions: []
     }
   },
   methods: {
-    back() {
-      console.log('back!!')
-    },
-    revertBack() {
-      console.log('revertBack!!')
-    },
     keyUp(event) {
-      if (this.pressedKeys.isCtrPressed && event.code === 'KeyZ')
-        this.pressedKeys.isShiftPressed ? this.revertBack() : this.back();
+      if (event.target.localName === 'input')
+        return;
+
+      if (this.pressedKeys.isCtrPressed && event.code === 'KeyZ'){
+        this.moveVersion(!this.pressedKeys.isShiftPressed);
+      }
+    },
+    moveVersion(isBack){
+      this.$moveVersion(isBack);
+      this.note.name = this.$version().name;
+      this.note.todos = this.$version().todos;
     },
     toggleAside() {
       document.getElementsByClassName('assign-place')[0].classList.toggle('collapsed');
     },
     reorderTodos() {
       this.note.todos = this.note.todos.sort((a, b) => a.done - b.done);
+      this.$addVersion(this.note);
     },
-    delTodo(event, index){
+    delTodo(event, index) {
       this.note.todos.splice(index, 1);
-    }
+      this.$addVersion(this.note);
+    },
   },
   mounted() {
     if (this.notes.has(`${this.id}`)) {
       this.note = this.notes.get(`${this.id}`)
     }
+    this.$addVersion(this.note, true);
     document.addEventListener('keyup', this.keyUp);
   },
   unmounted() {

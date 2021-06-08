@@ -8,7 +8,7 @@ export default {
             data = new Map(Object.entries(JSON.parse(item)));
 
         if (data)
-            notes =  reactive(data);
+            notes = reactive(data);
 
         app.provide('notes', notes);
 

@@ -28,15 +28,16 @@
       margin-right: 20px;
     }
 
-    &.done{
-      input{
+    &.done {
+      input {
         opacity: .6;
       }
     }
 
-    .del{
+    .del {
       padding: 5px;
-      img{
+
+      img {
         width: 20px;
       }
     }
@@ -58,7 +59,8 @@
     .item {
       padding: 10px 0;
       border-bottom: 1px solid var(--btn-bg-dark-color);
-      &.done{
+
+      &.done {
         opacity: .5;
       }
     }
