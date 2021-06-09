@@ -9,7 +9,7 @@ export default {
         }
 
         app.config.globalProperties.$addVersion = (note, isFirstVersion = false) => {
-            if(isFirstVersion){
+            if (isFirstVersion) {
                 currentVNumber = -1;
                 versions = reactive(new Map());
             }

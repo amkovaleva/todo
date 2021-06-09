@@ -1,7 +1,7 @@
 <template>
   <div :class="doneClass" class="row">
     <input v-model="todo.done" type="checkbox" @change="$emit('done-changed')">
-    <input v-model="todo.name" required>
+    <input v-model="todo.name" required @blur="$emit('blur-name')">
     <span class="btn del" @click="$emit('del-todo', $event, this.index)"><img alt="Удалить" src="/trash-bin.svg"></span>
   </div>
 </template>

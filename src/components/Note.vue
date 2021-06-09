@@ -3,19 +3,20 @@
     <router-link :to="{name:'Home'}">Главная</router-link>
     | Редактирование заметки:
   </h1>
-  <input v-model="note.name" class="title" required>
+  <input v-model="note.name" class="title" required @blur="$addVersion(note)">
   <div class="todos-container">
     <div class="todo-items">
       <AddTodo :todos="note.todos" @todo-added="$addVersion(note)"></AddTodo>
       <div class="added-todos">
         <Toto v-for="(todo, index) in note.todos" :index="index" :todo="todo"
               @done-changed="reorderTodos"
-              @del-todo="delTodo"></Toto>
+              @del-todo="delTodo"
+              @blur-name="$addVersion(note)"></Toto>
       </div>
     </div>
     <div class="assign-place">
       <span class="btn small" @click="toggleAside">&#9776;</span>
-      <span class="btn" @click="$saveNote(note, id); lastSavedVersion = version"><span>&#10003;</span><b>Сохранить заметку</b> </span>
+      <span class="btn" @click="$saveNote(note, id);"><span>&#10003;</span><b>Сохранить заметку</b> </span>
       <span class="btn" @click="$deleteNote(id)">
         <span class="del"><img alt="Удалить" src="/trash-bin.svg"></span>
         <b>Удалить заметку</b>
@@ -41,10 +42,7 @@ export default {
         name: 'Новая заметка',
         todos: []
       },
-      version: -1,
-      lastSavedVersion: 0,
       isBackCall: false,
-      versions: []
     }
   },
   methods: {
@@ -52,11 +50,11 @@ export default {
       if (event.target.localName === 'input')
         return;
 
-      if (this.pressedKeys.isCtrPressed && event.code === 'KeyZ'){
+      if (this.pressedKeys.isCtrPressed && event.code === 'KeyZ') {
         this.moveVersion(!this.pressedKeys.isShiftPressed);
       }
     },
-    moveVersion(isBack){
+    moveVersion(isBack) {
       this.$moveVersion(isBack);
       this.note.name = this.$version().name;
       this.note.todos = this.$version().todos;
