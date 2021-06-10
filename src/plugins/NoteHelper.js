@@ -1,5 +1,5 @@
 export default {
-    install: (app, router, popUpInfo, reactive) => {
+    install: (app, router, reactive) => {
 
         let notes = reactive(new Map()), data = null,
             item = localStorage.getItem('notes');
@@ -17,17 +17,20 @@ export default {
         };
 
         let delNote = (id) => {
-            console.log(`delNote ${id}`);
-            notes.delete(id);
-            saveData();
+            if(notes.has(id)) {
+                notes.delete(id);
+                saveData();
+            }
             router.push({name: 'Home'});
         };
 
         app.config.globalProperties.$saveNote = (note, id) => {
 
             let isValid = document.querySelectorAll('input[required]:invalid').length === 0;
-            if (!isValid)
+            if (!isValid) {
+                app.config.globalProperties.$popUpAlert('Проверьте данные и попробуйте сохранить еще раз!');
                 return;
+            }
 
             if (!notes.has(`${id}`))
                 id = notes.size ? Math.max(...Array.from(notes.keys())) + 1 : 1;
@@ -36,17 +39,11 @@ export default {
             saveData();
             router.push({name: 'Note', params: {id: id}});
 
-            popUpInfo.message = 'Заметка успешно сохранена!';
-            popUpInfo.justAlert = true;
-            popUpInfo.open = true;
+            app.config.globalProperties.$popUpAlert('Заметка успешно сохранена!');
         };
 
         app.config.globalProperties.$deleteNote = (id) => {
-            popUpInfo.message = 'удалить заметку';
-            popUpInfo.collBackParams = id;
-            popUpInfo.justAlert = false;
-            popUpInfo.collBackYes = delNote;
-            popUpInfo.open = true;
+            app.config.globalProperties.$popUpQuestion('удалить заметку', [{name: 'Да', callBack: delNote}, {name: 'Нет', callBack: null}], id);
         };
     }
 }

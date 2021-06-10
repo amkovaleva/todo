@@ -5,9 +5,11 @@
       <p class="title">{{ title }} </p>
       <p>{{ caption }}</p>
 
-      <div v-show="!this.popUpInfo.justAlert" class="buttons">
-        <span class="btn" @click="$popUpRes(true)"><b>ДА</b></span>
-        <span class="btn" @click="$popUpRes(false)"><b>Нет</b></span>
+      <div v-show="!justAlert" class="buttons">
+        <span class="btn" v-for="btn in popUpInfo.buttons"
+              @click="if(btn.callBack) btn.callBack(popUpInfo.collBackParams); close();">
+          <b>{{ btn.name }}</b>
+        </span>
       </div>
     </div>
   </div>
@@ -20,15 +22,18 @@ export default {
   inject: ['popUpInfo'],
   computed: {
     title() {
-      return this.popUpInfo.justAlert ? this.popUpInfo.message : this.popUpInfo.title;
+      return this.justAlert ? this.popUpInfo.message : this.popUpInfo.title;
     },
     caption() {
-      return this.popUpInfo.justAlert ? '' : `${this.popUpInfo.messageBase} ${this.popUpInfo.message}?`;
+      return this.justAlert ? '' : `${this.popUpInfo.messageBase} ${this.popUpInfo.message}?`;
+    },
+    justAlert() {
+      return this.popUpInfo.buttons.length === 0;
     }
   },
   methods: {
     close() {
-      this.popUpInfo.open = false;
+      this.$closePopUp();
     }
   }
 }

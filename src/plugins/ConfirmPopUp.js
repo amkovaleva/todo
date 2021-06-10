@@ -1,28 +1,51 @@
+import {reactive} from "vue";
+
 export default {
-    install: (app, popUpInfo) => {
+    install: (app) => {
+
+        const popUpInfo = reactive({
+            open: false,
+            title: 'Подтвердите действие.',
+            messageBase: 'Вы действительно хотите ',
+            message: '',
+            collBackParams: null,
+            buttons: [],
+        });
 
         app.provide('popUpInfo', popUpInfo);
 
-        let keyup = (event) => {
-            if (event.key === 'Escape')
-                popUpInfo.open = false;
+
+        let openPopUp = () => {
+            popUpInfo.open = true;
         };
 
+        let closePopUp = () => {
+            popUpInfo.open = false;
+        };
+
+        let keyup = (event) => {
+            if (event.key === 'Escape')
+                closePopUp();
+        };
         document.addEventListener('keyup', keyup);
 
 
-        app.config.globalProperties.$popUpRes = (idConfirm) => {
-
-            popUpInfo.open = false;
-
-            if (idConfirm && popUpInfo.collBackYes)
-                popUpInfo.collBackYes.call(null, popUpInfo.collBackParams);
-
-            if (idConfirm && popUpInfo.collBackNo)
-                popUpInfo.collBackNo.call(null, popUpInfo.collBackParams);
-
-            popUpInfo.collBackYes = null;
-            popUpInfo.collBackNo = null;
+        app.config.globalProperties.$popUpAlert = (message) => {
+            popUpInfo.message = message;
+            popUpInfo.buttons = [];
+            openPopUp();
         };
+
+        app.config.globalProperties.$closePopUp = () => {
+            closePopUp();
+        };
+
+        app.config.globalProperties.$popUpQuestion = (message, buttons, collBackParams = null) => {
+            popUpInfo.message = message;
+            popUpInfo.collBackParams = collBackParams;
+            popUpInfo.buttons = buttons;
+            openPopUp();
+        };
+
     }
 }

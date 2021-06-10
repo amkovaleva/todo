@@ -6,21 +6,11 @@ import CommandKeys from './plugins/CommandKeys'
 import ConfirmPopUp from './plugins/ConfirmPopUp'
 import Versioning from './plugins/Versioning'
 
-const popUpInfo = reactive({
-    open: false,
-    title: 'Подтвердите действие.',
-    messageBase: 'Вы действительно хотите ',
-    message: '',
-    collBackYes: null,
-    collBackNo: null,
-    collBackParams: null,
-    justAlert: false,
-});
 
 let notesApp = createApp(App);
 notesApp.use(router);
-notesApp.use(ConfirmPopUp, popUpInfo);
+notesApp.use(ConfirmPopUp);
 notesApp.use(CommandKeys, reactive);
 notesApp.use(Versioning, reactive);
-notesApp.use(NoteHelper, router, popUpInfo, reactive);
+notesApp.use(NoteHelper, router, reactive);
 notesApp.mount('#app');

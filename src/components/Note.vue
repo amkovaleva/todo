@@ -16,13 +16,14 @@
     </div>
     <div class="assign-place">
       <span class="btn small" @click="toggleAside">&#9776;</span>
-      <span class="btn" @click="$saveNote(note, id);"><span>&#10003;</span><b>Сохранить заметку</b> </span>
+      <span class="btn" @click="save"><span>&#10003;</span><b>Сохранить заметку</b> </span>
       <span class="btn" @click="$deleteNote(id)">
         <span class="del"><img alt="Удалить" src="/trash-bin.svg"></span>
         <b>Удалить заметку</b>
       </span>
       <span class="btn" @click="moveVersion(true)"><span>&cularr;</span><b>Отменить изменение</b> </span>
       <span class="btn" @click="moveVersion(false)"><span>&curarr;</span><b>Вернуть изменение</b> </span>
+      <span class="btn" @click="moveVersion(false, true)"><span>&#8678;</span><b>Отменить редактирование</b> </span>
     </div>
   </div>
 </template>
@@ -54,10 +55,15 @@ export default {
         this.moveVersion(!this.pressedKeys.isShiftPressed);
       }
     },
-    moveVersion(isBack) {
-      this.$moveVersion(isBack);
-      this.note.name = this.$version().name;
-      this.note.todos = this.$version().todos;
+    moveVersion(isBack, isBackToSave = false) {
+      this.$moveVersion(() => {
+        this.note.name = this.$version().name;
+        this.note.todos = this.$version().todos;
+      }, isBack, isBackToSave);
+    },
+    save() {
+      this.$saveNote(this.note, this.id);
+      this.$addVersion(this.note, true, false);
     },
     toggleAside() {
       document.getElementsByClassName('assign-place')[0].classList.toggle('collapsed');
@@ -69,17 +75,27 @@ export default {
     delTodo(event, index) {
       this.note.todos.splice(index, 1);
       this.$addVersion(this.note);
-    },
+    }
   },
   mounted() {
-    if (this.notes.has(`${this.id}`)) {
+    if (this.notes.has(`${this.id}`))
       this.note = this.notes.get(`${this.id}`)
-    }
+
     this.$addVersion(this.note, true);
     document.addEventListener('keyup', this.keyUp);
   },
-  unmounted() {
+  beforeUnmount() {
     document.removeEventListener('keyup', this.keyUp);
+  },
+  async beforeRouteLeave(to, from, next) {
+    let res = await this.$checkSaveCurVersion()
+    if (res) {
+      this.note.name = this.$lastSavedVersion().name;
+      this.note.todos = this.$lastSavedVersion().todos;
+      next();
+    }
+    else
+      next(false);
   }
 }
 </script>
